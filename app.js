@@ -3,14 +3,31 @@ const mongoConnection = require('./model/databaseConnection');
 const app = express()
 const port = 9000
 const path = require('path');
+const { productsRouter, productRouter } = require('./router/productRouter');
+const { userRouter } = require('./router/userRouter');
+const cors = require('cors');
 mongoConnection();
 app.use(express.json());
+app.use(cors())
 app.use('/public/images', express.static(path.join('public', 'images')));
 
-const { productsRouter, productRouter } = require('./router/productRouter');
+
+// app.use((req, res, next) => {
+//     res.setHeader('Access-Control-Allow-Origin', '*');
+//     res.setHeader(
+//         'Access-Control-Allow-Headers',
+//         'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+//     );
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+
+//     next();
+// });
+
+
 
 app.use('/products', productsRouter);
-app.use('/product', productRouter);
+// app.use('/product', productRouter);
+app.use('/user', userRouter)
 // Logging the rejected field from multer error
 app.use((error, req, res, next) => {
     if (error.message === "Unexpected field") {
